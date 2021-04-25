@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Занятие 3</title>
+  </head>
+  <body>
+    <input type="text" id="num1"> 
+    <input type="text" id="num2">
+    <button onclick="calc('+')">+</button>
+    <button onclick="calc('-')">-</button>
+    <button onclick="calc('/')">/</button>
+    <button onclick="calc('*')">*</button>
+    <script>
+      
+    function calc(operator){
+        let num1 = +document.getElementById("num1").value;
+        let num2 = +document.getElementById("num2").value;
+        //console.log(operator=="+"?num1+num2:operator=="-"?num1-num2:operator=="/"?num1/num2:num1*num2);
+        if(operator == "+") console.log(num1+num2);
+        else if(operator == "-") console.log(num1-num2);
+        else if(operator == "/") console.log(num1/num2);
+        else if(operator == "*") console.log(num1*num2);
+    }
+    
+      /*function f(x){
+        return x**2;
+      }
+      console.log(f(5));
+      console.log(f(-3));
+      
+      sayHi("Alex");
+      sayHi();*/
+      /*// максимальный нечетный элемент массива
+      let nums = [-346,-22,-73,-246,-23,-65,-35];
+      let max = -Infinity;
+      for(let i=0; i<nums.length; i++){
+        if(max<nums[i] && nums[i]%2!=0){
+          max = nums[i];
+        }
+      }
+      console.log(max);*/
+    </script>
+  </body>
+</html>
