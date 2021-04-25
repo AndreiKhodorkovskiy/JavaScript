@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <title>Plane</title>
+    <style>
+      img{
+        width:270px;
+        transform: scale(-1,1);
+        position:absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="/img/plane.png" alt="">
+    <script>
+     
+    
+      let left = 0;
+      let plane = document.getElementsByTagName('img')[0];
+      let reverse = false;
+      function movePlane(){
+        if(left+plane.width <= window.innerWidth && !reverse){
+          plane.style.transform = "scale(-1,1)";
+          left++;
+          plane.style.left = left+"px";
+        }else if(left>0){
+          reverse = true;
+          plane.style.transform = "scale(1,1)";
+          left--;
+          plane.style.left = left+"px";
+        }else{
+          reverse = false;
+        }
+      }
+      setInterval(movePlane,10);
+    </script>
+  </body>
+</html>
