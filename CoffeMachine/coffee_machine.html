@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <!-- Обязательные метатеги -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/750282b7c8.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Coffee machine</title>
+    <style>
+      body{
+        background-image: url("/img/coffee_background.jpg");
+      }
+      .container.rounded{
+        background: rgba(139,69,19,.5);
+      }
+      .coffee-btn-group{
+        background: #BC8F8F;
+        height:60px;
+        color: gold;
+        font-size:2em;
+        border-radius: 30px 0 0 30px;
+        font-weight:600px;
+        border: 1px solid wheat;
+      }
+      .coffee-btn{
+        width:60px;
+        height:60px;
+        background:brown;
+        cursor:pointer;
+        border:1px solid #AF5A5A;
+        box-shadow:1px 1px 5px black;
+        display: inline-block;
+      }
+      .coffee-btn:hover{
+        background: #800000;
+      }
+      .coffee-btn:active{
+        background: red;
+        box-shadow: inset 0 0 10px black;
+      }
+      .coffee-btn-group>span{
+        vertical-align: top;
+      }
+      #display{
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.8rem;
+        width:"100%";
+        height:150px;
+        background: navy;
+        color:white;
+        border: 5px groove DarkSlateGray;
+      }
+      #changeBox{
+        width:"100%";
+        height:200px;
+        background: LightGreen;
+        border: 5px solid GreenYellow;
+        position:relative;
+      }
+      img[src$="rub.png"]{
+        width:65px;
+        position:absolute;
+        cursor:pointer;
+      }
+      img[src$="rub.png"]:hover{
+        filter: contrast(150%);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container rounded my-5 py-3">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="coffee-btn-group my-3">
+            <div class="coffee-btn rounded-circle" onclick="getCoffee('Капучино',68)"></div>
+            <span>Капучино - 68р.</span>
+          </div>
+          <div class="coffee-btn-group my-3">
+            <div class="coffee-btn rounded-circle" onclick="getCoffee('Американо',37)"></div>
+            <span>Американо - 37р.</span>
+          </div>
+          <div class="coffee-btn-group my-3">
+            <div class="coffee-btn rounded-circle" onclick="getCoffee('Латте',52)"></div>
+            <span>Латте - 52р.</span>
+          </div>
+          <div class="coffee-btn-group my-3">
+            <div class="coffee-btn rounded-circle" onclick="getCoffee('Гляссе',83)"></div>
+            <span>Гляссе - 83р.</span>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-6 text-center">
+              <div id="display" class="p-3">
+                <p id="displayInfo">Закажите напиток</p>
+                <p><i class="fas fa-money-bill"></i> Баланс: <span id="balance">0</span>руб.</p>
+                <div class="progress" style="background:navy;">
+                  <div class="progress-bar" hidden role="progressbar" style="width: 0%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <button class="btn btn-warning btn-lg my-3" onclick="getChange(money.value)">Выдать сдачу</button>
+            </div>
+            <div class="col-sm-6">
+              <input hidden type="text" id="money">
+              <img src="/img/bill_acc.png" id="bill_acc" alt="">
+              <div id="changeBox"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <img src="/img/50rub.jpg" data-value="50" alt="">
+      <img src="/img/100rub.jpg" data-value="100" alt="">
+      <img src="/img/500rub.jpg" data-value="500" alt="">
+    </div>
+    <script>
+      let banknotes = document.querySelectorAll('img[src$="rub.jpg"]');
+      let bill_acc = document.getElementById('bill_acc');
+      for(let i=0; i<banknotes.length; i++){
+        let banknote = banknotes[i];
+        banknote.onmousedown = function(e){
+          banknote.style.position = "absolute";
+          banknote.style.transform = "rotate(90deg)";
+          banknote.ondragstart = function(){return false}
+          document.onmousemove = function(event){
+            banknote.style.top = event.clientY-banknote.offsetHeight/2+"px";
+            banknote.style.left= event.clientX-banknote.offsetWidth/2+"px";
+          }
+          banknote.onmouseup = function(){
+            document.onmousemove = function(){return false}
+            let bill_acc_top = bill_acc.getBoundingClientRect().top;
+            let bill_acc_right=bill_acc.getBoundingClientRect().right;
+            let bill_acc_left=bill_acc.getBoundingClientRect().left;
+            let bill_acc_bottom=bill_acc.getBoundingClientRect().bottom-(2/3*bill_acc.height);
+            let banknote_top = banknote.getBoundingClientRect().top;
+            let banknote_right = banknote.getBoundingClientRect().right;
+            let banknote_left = banknote.getBoundingClientRect().left;
+            if(bill_acc_top<banknote_top && bill_acc_right>banknote_right && bill_acc_left<banknote_left && bill_acc_bottom>banknote_top){
+              banknote.hidden = true;
+              money.value = +money.value + (+banknote.dataset.value);
+              balance.innerText = money.value;
+            }
+          }
+        }
+      }
+    
+      let money = document.getElementById('money');
+      let display = document.getElementById('display');
+      let displayInfo = document.getElementById('displayInfo');
+      let progressBar = document.querySelector(".progress-bar");
+      let changeBox = document.getElementById("changeBox");
+      function getCoffee(coffeeName, coffeePrice){
+        if(money.value>=coffeePrice){
+          progressBar.hidden = false;
+          let i = 0;
+          let timerId = setInterval(function(){
+            progressBar.style.width = (++i)+"%";
+            
+            if(i<35)
+              displayInfo.innerHTML = `<i class="fas fa-hourglass-start"></i> Кофе готовится, ожидайте...`;
+            else if(i<70)
+              displayInfo.innerHTML = `<i class="fas fa-hourglass-half"></i> Кофе готовится, ожидайте...`;
+            else if(i<110)
+              displayInfo.innerHTML = `<i class="fas fa-hourglass-end"></i> Кофе готовится, ожидайте...`;
+            else if(i==110) {
+              clearInterval(timerId);
+              progressBar.hidden=true;
+              progressBar.style.width = "0%";
+              i = 0;
+              displayInfo.innerText = `Кофе ${coffeeName} готов, с вас ${coffeePrice}!`;
+            }
+          },80)
+          money.value = money.value-coffeePrice;
+          balance.innerText = money.value;
+        }
+        else
+          displayInfo.innerText = `Недостаточно средств, необходимо ещё ${coffeePrice-money.value}`;
+      }
+      
+      let a;
+      a = 'hello ';
+      a = 'world';
+      
+      
+      
+      function getChange(currency){
+        // Реализовать цикл вместо рекурсии
+        let change = 0;
+        let top = Math.random()*(changeBox.offsetHeight-65);
+        let left = Math.random()*(changeBox.offsetWidth-65);
+        if(currency >= 10) change = 10;
+        else if(currency >= 5) change = 5;
+        else if(currency >= 2) change = 2;
+        else if(currency >= 1) change = 1;
+        
+        if(change!=0){
+          console.log(change);
+          changeBox.innerHTML = changeBox.innerHTML + `<img onclick="this.hidden=true" src="img/${change}rub.png" style="top:${top}px;left:${left}px;">`;
+          getChange(currency-change);
+        }else {
+          money.value = 0;
+          balance.innerText = money.value;
+          let audio = new Audio("/audio/coins.mp3");
+          audio.play();
+        }
+      }
+      
+      
+      /*
+      решение дз на 07.04.2021
+      
+      function getChange1(currency){
+        while(currency>0){
+          let change = 0;
+          if(currency >= 10) change = 10;
+          else if(currency >= 5) change = 5;
+          else if(currency >= 2) change = 2;
+          else if(currency >= 1) change = 1;
+          currency -= change;
+          console.log(change);
+        }
+        console.log('Вся сдача выдана!');
+      }*/
+    </script>
+
+    <!-- Вариант 1: Bootstrap в связке с Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+
+  </body>
+</html>
